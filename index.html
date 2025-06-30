@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>URL Analyzer - Student Project</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="main-container">
+    <div class="header">
+      <h1>🔍 URL Analyzer</h1>
+      <p class="subtitle">Analyze IP, WHOIS, SSL, Location, and more!</p>
+    </div>
+
+    <form method="POST" class="form-box">
+      <input type="text" name="url" placeholder="Enter a URL (e.g. https://example.com)" required>
+      <button type="submit">Analyze</button>
+    </form>
+
+    {% if result %}
+    <div class="results fade-in">
+      <h2>Results for <span class="highlight">{{ result.url }}</span></h2>
+
+      <div class="info-block">
+        <p><strong>🌐 IP Address:</strong> {{ result.ip }}</p>
+        <p><strong>📄 Page Title:</strong> {{ result.title }}</p>
+      </div>
+
+      <div class="info-block">
+        <h3>🌍 IP Location Info</h3>
+        <p><strong>Country:</strong> {{ result.ip_country }}</p>
+        <p><strong>Region:</strong> {{ result.ip_region }}</p>
+        <p><strong>City:</strong> {{ result.ip_city }}</p>
+        <p><strong>ZIP:</strong> {{ result.ip_zip }}</p>
+        <p><strong>ISP:</strong> {{ result.ip_isp }}</p>
+        <p><strong>Timezone:</strong> {{ result.ip_timezone }}</p>
+        <p><strong>Coordinates:</strong> {{ result.ip_lat }}, {{ result.ip_lon }}</p>
+      </div>
+
+      <div class="info-block">
+        <h3>🔐 SSL Certificate</h3>
+        <p><strong>SSL Valid:</strong> {{ 'Yes ✅' if result.ssl_valid else 'No ❌' }}</p>
+        <p><strong>Expires On:</strong> {{ result.ssl_expiry }}</p>
+        <p><strong>Days Left:</strong> {{ result.ssl_days_left }}</p>
+      </div>
+
+      <div class="whois-section">
+        <h3>📁 WHOIS Information</h3>
+        <p><strong>Registrar:</strong> {{ result.registrar }}</p>
+        <p><strong>Domain Created:</strong> {{ result.creation_date }}</p>
+        <p><strong>Domain Expiry:</strong> {{ result.expiration_date }}</p>
+        <p><strong>Registered Country:</strong> {{ result.country }}</p>
+        <p><strong>Name Servers:</strong>
+          {% if result.name_servers != "N/A" %}
+            <ul>
+              {% for ns in result.name_servers %}
+                <li>{{ ns }}</li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            N/A
+          {% endif %}
+        </p>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>
